@@ -10,8 +10,8 @@ Phase 2 — Supabase Connection + Authentication.
 
 Create a Supabase project and copy:
 - Project URL
-- Publishable/anon key
-- Service-role key (server only)
+- Publishable key
+- Secret/service-role key (server only)
 
 Do not put the service-role key in Flutter.
 
@@ -21,7 +21,7 @@ Run from `mobile/`:
 
 ```powershell
 flutter pub get
-flutter run -d chrome --web-port 3000 --dart-define=SUPABASE_URL="YOUR_URL" --dart-define=SUPABASE_ANON_KEY="YOUR_ANON_KEY"
+flutter run -d chrome --web-port 3000 --dart-define=SUPABASE_URL="YOUR_URL" --dart-define=SUPABASE_PUBLISHABLE_KEY="YOUR_ANON_KEY"
 ```
 
 For Android, use the same `--dart-define` values with your Android device ID.
@@ -44,7 +44,8 @@ Fill these values in `backend/.env`:
 
 ```text
 SUPABASE_URL=
-SUPABASE_ANON_KEY=
+SUPABASE_PUBLISHABLE_KEY=
+SUPABASE_SECRET_KEY=
 SUPABASE_SERVICE_ROLE_KEY=
 ```
 
