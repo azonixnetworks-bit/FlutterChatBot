@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../auth/data/auth_repository.dart';
 import '../../auth/presentation/auth_controller.dart';
@@ -38,22 +39,31 @@ class HomeScreen extends ConsumerWidget {
       body: Center(
         child: Padding(
           padding: const EdgeInsets.all(24),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              const Icon(Icons.psychology_alt_outlined, size: 64),
-              const SizedBox(height: 16),
-              const Text(
-                'Phase 2 authentication is connected.',
-                style: TextStyle(fontSize: 22, fontWeight: FontWeight.w600),
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(height: 8),
-              Text(
-                email,
-                textAlign: TextAlign.center,
-              ),
-            ],
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 520),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Icon(Icons.psychology_alt_outlined, size: 64),
+                const SizedBox(height: 16),
+                const Text(
+                  'Your knowledge workspace is ready.',
+                  style: TextStyle(fontSize: 22, fontWeight: FontWeight.w600),
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  email,
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 24),
+                FilledButton.icon(
+                  onPressed: () => context.go('/knowledge'),
+                  icon: const Icon(Icons.folder_copy_outlined),
+                  label: const Text('Open Knowledge Library'),
+                ),
+              ],
+            ),
           ),
         ),
       ),
