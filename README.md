@@ -4,7 +4,7 @@ Multimodal knowledge chatbot built with Flutter, FastAPI, and Supabase.
 
 ## Current status
 
-Phase 2 — Supabase Connection + Authentication.
+Phase 3 — Supabase Tables + RLS + Storage Security.
 
 ## Supabase setup
 
@@ -86,3 +86,27 @@ flutter run -d chrome --dart-define-from-file=env/dev.json
 ```
 
 `mobile/env/dev.json` is git-ignored and must not be committed.
+
+
+## Phase 3 database setup
+
+The Phase 3 migration is stored at:
+
+`supabase/migrations/202610080001_phase3_core.sql`
+
+Copy it to the clipboard from PowerShell:
+
+```powershell
+cd G:\FlutterChatBot
+Get-Content -Raw .\supabase\migrations\202610080001_phase3_core.sql | Set-Clipboard
+```
+
+Paste it into Supabase SQL Editor and run it.
+
+Then verify with:
+
+```powershell
+Get-Content -Raw .\supabase\tests\phase3_verify.sql | Set-Clipboard
+```
+
+See `docs/PHASE_3_SETUP.md` for expected results.
