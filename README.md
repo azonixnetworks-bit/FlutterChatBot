@@ -72,3 +72,17 @@ Flutter supports:
 Supabase email confirmation behavior follows the project's Auth settings.
 
 See `docs/PROJECT_SPEC.md` for the 20-phase roadmap.
+
+
+## Easier local Flutter config
+
+Create `mobile/env/dev.json` from `mobile/env/dev.json.example` and fill only your local Supabase public values.
+
+Then run:
+
+```powershell
+cd mobile
+flutter run -d chrome --dart-define-from-file=env/dev.json
+```
+
+`mobile/env/dev.json` is git-ignored and must not be committed.
