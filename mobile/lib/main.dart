@@ -14,7 +14,7 @@ Future<void> main() async {
   if (config.isSupabaseConfigured) {
     await Supabase.initialize(
       url: config.supabaseUrl,
-      anonKey: config.supabaseAnonKey,
+      publishableKey: config.supabasePublishableKey,
     );
     supabaseReady = true;
   }
