@@ -12,7 +12,9 @@ class Settings(BaseSettings):
     cors_origins: str = "http://localhost:3000,http://localhost:5173"
 
     supabase_url: str = ""
+    supabase_publishable_key: str = ""
     supabase_anon_key: str = ""
+    supabase_secret_key: str = ""
     supabase_service_role_key: str = ""
 
     ai_provider: str = ""
@@ -39,8 +41,12 @@ class Settings(BaseSettings):
         return [x.strip() for x in self.cors_origins.split(",") if x.strip()]
 
     @property
+    def supabase_client_key(self) -> str:
+        return self.supabase_publishable_key.strip() or self.supabase_anon_key.strip()
+
+    @property
     def supabase_auth_configured(self) -> bool:
-        return bool(self.supabase_url.strip() and self.supabase_anon_key.strip())
+        return bool(self.supabase_url.strip() and self.supabase_client_key)
 
 
 @lru_cache
