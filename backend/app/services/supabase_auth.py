@@ -15,7 +15,7 @@ class SupabaseAuthService:
     async def get_user(self, access_token: str) -> AuthUser:
         url = f"{self._settings.supabase_url.rstrip('/')}/auth/v1/user"
         headers = {
-            "apikey": self._settings.supabase_anon_key,
+            "apikey": self._settings.supabase_client_key,
             "Authorization": f"Bearer {access_token}",
         }
 
