@@ -10,6 +10,7 @@ class Settings(BaseSettings):
     api_host: str = "0.0.0.0"
     api_port: int = 8000
     cors_origins: str = "http://localhost:3000,http://localhost:5173"
+    cors_origin_regex: str = r"^http://(localhost|127\.0\.0\.1):\d+$"
 
     supabase_url: str = ""
     supabase_publishable_key: str = ""
@@ -45,8 +46,16 @@ class Settings(BaseSettings):
         return self.supabase_publishable_key.strip() or self.supabase_anon_key.strip()
 
     @property
+    def supabase_server_key(self) -> str:
+        return self.supabase_secret_key.strip() or self.supabase_service_role_key.strip()
+
+    @property
     def supabase_auth_configured(self) -> bool:
         return bool(self.supabase_url.strip() and self.supabase_client_key)
+
+    @property
+    def supabase_admin_configured(self) -> bool:
+        return bool(self.supabase_url.strip() and self.supabase_server_key)
 
 
 @lru_cache
