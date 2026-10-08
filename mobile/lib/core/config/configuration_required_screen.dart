@@ -7,12 +7,12 @@ class ConfigurationRequiredScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Multimodal Knowledge AI')),
-      body: const Padding(
-        padding: EdgeInsets.all(24),
+      body: Padding(
+        padding: const EdgeInsets.all(24),
         child: Center(
           child: ConstrainedBox(
-            constraints: BoxConstraints(maxWidth: 640),
-            child: Column(
+            constraints: const BoxConstraints(maxWidth: 640),
+            child: const Column(
               mainAxisSize: MainAxisSize.min,
               children: [
                 Icon(Icons.settings_suggest_outlined, size: 56),
@@ -23,8 +23,9 @@ class ConfigurationRequiredScreen extends StatelessWidget {
                 ),
                 SizedBox(height: 12),
                 Text(
-                  'Run the app with SUPABASE_URL and SUPABASE_ANON_KEY '
-                  'using --dart-define. Never place the service-role key '
+                  'Run the app with SUPABASE_URL and '
+                  'SUPABASE_PUBLISHABLE_KEY using --dart-define. '
+                  'Never place a Supabase secret/service-role key '
                   'inside the Flutter app.',
                   textAlign: TextAlign.center,
                 ),
