@@ -115,7 +115,7 @@ create table if not exists public.knowledge_chunks (
   constraint knowledge_chunks_parent_owner_fk
     foreign key (parent_chunk_id, user_id)
     references public.knowledge_chunks (id, user_id)
-    on delete set null
+    on delete cascade
 );
 
 create index if not exists knowledge_chunks_user_id_idx
