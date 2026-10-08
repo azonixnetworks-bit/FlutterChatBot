@@ -21,7 +21,7 @@ Run from `mobile/`:
 
 ```powershell
 flutter pub get
-flutter run -d chrome --web-port 3000 --dart-define=SUPABASE_URL="YOUR_URL" --dart-define=SUPABASE_PUBLISHABLE_KEY="YOUR_ANON_KEY"
+flutter run -d chrome --web-port 3000 --dart-define=SUPABASE_URL="YOUR_URL" --dart-define=SUPABASE_PUBLISHABLE_KEY="YOUR_PUBLISHABLE_KEY"
 ```
 
 For Android, use the same `--dart-define` values with your Android device ID.
