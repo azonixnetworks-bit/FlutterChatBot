@@ -1,7 +1,7 @@
 name: multimodal_knowledge_ai
 description: Multimodal personal knowledge chatbot.
 publish_to: "none"
-version: 0.2.0+2
+version: 0.3.0+3
 
 environment:
   sdk: ">=3.9.0 <4.0.0"
@@ -13,6 +13,9 @@ dependencies:
   go_router: ^14.8.1
   dio: ^5.8.0+1
   supabase_flutter: ^2.18.0
+  file_picker: ^13.1.0
+  uuid: ^4.5.2
+  crypto: ^3.0.7
   cupertino_icons: ^1.0.8
 
 dev_dependencies:
