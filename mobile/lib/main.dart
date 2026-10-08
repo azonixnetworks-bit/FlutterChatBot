@@ -1,8 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'app/app.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
-void main() {
+import 'app/app.dart';
+import 'core/config/app_config.dart';
+
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  runApp(const ProviderScope(child: KnowledgeAiApp()));
+
+  final config = AppConfig.fromEnvironment();
+  var supabaseReady = false;
+
+  if (config.isSupabaseConfigured) {
+    await Supabase.initialize(
+      url: config.supabaseUrl,
+      anonKey: config.supabaseAnonKey,
+    );
+    supabaseReady = true;
+  }
+
+  runApp(
+    ProviderScope(
+      child: KnowledgeAiApp(supabaseReady: supabaseReady),
+    ),
+  );
 }
