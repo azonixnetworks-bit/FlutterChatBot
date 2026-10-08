@@ -106,7 +106,7 @@ class _UploadProgressCard extends StatelessWidget {
             ),
             const SizedBox(height: 10),
             LinearProgressIndicator(
-              value: state.isBusy ? state.progress.clamp(0, 1) : 1,
+              value: state.isBusy ? state.progress.clamp(0, 1).toDouble() : 1,
             ),
           ],
         ),
@@ -219,7 +219,7 @@ class _StatusLine extends StatelessWidget {
           const SizedBox(width: 8),
           Expanded(
             child: LinearProgressIndicator(
-              value: progress.clamp(0, 100) / 100,
+              value: progress.clamp(0, 100).toDouble() / 100,
             ),
           ),
           const SizedBox(width: 8),
