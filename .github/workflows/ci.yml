@@ -11,6 +11,10 @@ on:
       - "mobile/**"
       - "backend/**"
 
+concurrency:
+  group: project-ci-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   flutter:
     runs-on: ubuntu-latest
