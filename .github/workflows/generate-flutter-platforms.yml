@@ -1,0 +1,51 @@
+name: Generate Flutter Platforms
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - ".github/workflows/generate-flutter-platforms.yml"
+
+permissions:
+  contents: write
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Flutter stable
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+
+      - name: Generate Android, iOS and Web platform files
+        working-directory: mobile
+        run: |
+          flutter create             --platforms=android,ios,web             --project-name=multimodal_knowledge_ai             --org=com.azonixnetworks             .
+
+      - name: Restore project-owned source files
+        run: |
+          git checkout HEAD -- mobile/lib mobile/test mobile/pubspec.yaml mobile/analysis_options.yaml
+
+      - name: Validate Flutter project
+        working-directory: mobile
+        run: |
+          flutter pub get
+          flutter analyze
+          flutter test
+
+      - name: Commit generated platform files
+        run: |
+          if git diff --quiet && git diff --cached --quiet && [ -z "$(git ls-files --others --exclude-standard)" ]; then
+            echo "No platform changes to commit."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add mobile/android mobile/ios mobile/web mobile/.metadata mobile/.gitignore
+          git commit -m "chore: generate Flutter Android iOS and Web platforms"
+          git push
