@@ -4,7 +4,7 @@ Multimodal knowledge chatbot built with Flutter, FastAPI, and Supabase.
 
 ## Current status
 
-Phase 3 — Supabase Tables + RLS + Storage Security.
+Phase 4 — Upload Manager + Processing Jobs.
 
 ## Supabase setup
 
@@ -110,3 +110,10 @@ Get-Content -Raw .\supabase\tests\phase3_verify.sql | Set-Clipboard
 ```
 
 See `docs/PHASE_3_SETUP.md` for expected results.
+
+
+## Phase 4
+
+Apply `supabase/migrations/202610080002_phase4_upload_jobs.sql`, configure the FastAPI backend secret key locally, and run the Knowledge Library upload flow.
+
+Full instructions: `docs/PHASE_4_SETUP.md`
