@@ -1,19 +1,25 @@
 class AppConfig {
   const AppConfig({
     required this.supabaseUrl,
-    required this.supabaseAnonKey,
+    required this.supabasePublishableKey,
   });
 
   factory AppConfig.fromEnvironment() {
+    const publishableKey =
+        String.fromEnvironment('SUPABASE_PUBLISHABLE_KEY');
+    const legacyAnonKey = String.fromEnvironment('SUPABASE_ANON_KEY');
+
     return const AppConfig(
       supabaseUrl: String.fromEnvironment('SUPABASE_URL'),
-      supabaseAnonKey: String.fromEnvironment('SUPABASE_ANON_KEY'),
+      supabasePublishableKey:
+          publishableKey != '' ? publishableKey : legacyAnonKey,
     );
   }
 
   final String supabaseUrl;
-  final String supabaseAnonKey;
+  final String supabasePublishableKey;
 
   bool get isSupabaseConfigured =>
-      supabaseUrl.trim().isNotEmpty && supabaseAnonKey.trim().isNotEmpty;
+      supabaseUrl.trim().isNotEmpty &&
+      supabasePublishableKey.trim().isNotEmpty;
 }
