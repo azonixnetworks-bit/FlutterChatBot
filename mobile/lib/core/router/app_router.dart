@@ -9,6 +9,7 @@ import '../../features/auth/data/auth_repository.dart';
 import '../../features/auth/presentation/login_screen.dart';
 import '../../features/auth/presentation/register_screen.dart';
 import '../../features/home/presentation/home_screen.dart';
+import '../../features/knowledge/presentation/knowledge_library_screen.dart';
 
 final appRouterProvider = Provider<GoRouter>((ref) {
   final authRepository = ref.watch(authRepositoryProvider);
@@ -39,6 +40,10 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: '/',
         builder: (context, state) => const HomeScreen(),
+      ),
+      GoRoute(
+        path: '/knowledge',
+        builder: (context, state) => const KnowledgeLibraryScreen(),
       ),
       GoRoute(
         path: '/login',
