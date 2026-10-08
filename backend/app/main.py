@@ -1,5 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+
 from app.api.router import api_router
 from app.core.config import get_settings
 from app.core.exceptions import register_exception_handlers
@@ -10,10 +11,11 @@ configure_logging(settings.app_debug)
 
 app = FastAPI(title=settings.app_name, debug=settings.app_debug)
 
-if settings.cors_origin_list:
+if settings.cors_origin_list or settings.cors_origin_regex:
     app.add_middleware(
         CORSMiddleware,
         allow_origins=settings.cors_origin_list,
+        allow_origin_regex=settings.cors_origin_regex or None,
         allow_credentials=True,
         allow_methods=["*"],
         allow_headers=["*"],
