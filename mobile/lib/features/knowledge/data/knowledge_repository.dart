@@ -69,14 +69,6 @@ class KnowledgeRepository {
     'jpeg',
     'png',
     'webp',
-    'mp3',
-    'wav',
-    'm4a',
-    'aac',
-    'mp4',
-    'mov',
-    'mkv',
-    'webm',
   ];
 
   final SupabaseClient _client;
@@ -232,14 +224,6 @@ class KnowledgeRepository {
       'jpg' || 'jpeg' => 'image/jpeg',
       'png' => 'image/png',
       'webp' => 'image/webp',
-      'mp3' => 'audio/mpeg',
-      'wav' => 'audio/wav',
-      'm4a' => 'audio/mp4',
-      'aac' => 'audio/aac',
-      'mp4' => 'video/mp4',
-      'mov' => 'video/quicktime',
-      'mkv' => 'video/x-matroska',
-      'webm' => 'video/webm',
       _ => 'application/octet-stream',
     };
   }

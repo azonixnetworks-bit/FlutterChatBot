@@ -108,8 +108,6 @@ Home -> Open Knowledge Library -> Upload
 - xls
 - xlsx
 - jpg/jpeg/png/webp
-- mp3/wav/m4a/aac
-- mp4/mov/mkv/webm
 
 The default local upload limit is 50 MB and can be changed with `UPLOAD_MAX_BYTES`, subject to the Supabase project/bucket limit.
 

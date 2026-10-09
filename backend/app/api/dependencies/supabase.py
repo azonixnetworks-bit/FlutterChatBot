@@ -2,6 +2,7 @@ from fastapi import Depends, HTTPException, status
 
 from app.core.config import Settings, get_settings
 from app.services.supabase_data import SupabaseDataService
+from app.services.knowledge_processing import KnowledgeProcessingService
 
 
 def get_supabase_data_service(
@@ -14,3 +15,9 @@ def get_supabase_data_service(
         )
 
     return SupabaseDataService(settings)
+
+
+def get_knowledge_processing_service(
+    data: SupabaseDataService = Depends(get_supabase_data_service),
+) -> KnowledgeProcessingService:
+    return KnowledgeProcessingService(data)

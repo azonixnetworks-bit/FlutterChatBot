@@ -3,10 +3,11 @@ from uuid import UUID
 from fastapi import APIRouter, Depends, HTTPException, status
 
 from app.api.dependencies.auth import get_current_user
-from app.api.dependencies.supabase import get_supabase_data_service
+from app.api.dependencies.supabase import get_knowledge_processing_service, get_supabase_data_service
 from app.schemas.auth import AuthUser
 from app.schemas.knowledge import QueueProcessingJobRequest, ProcessingJobResponse
 from app.services.supabase_data import SupabaseDataError, SupabaseDataService
+from app.services.knowledge_processing import KnowledgeProcessingService
 
 router = APIRouter(prefix="/knowledge", tags=["knowledge"])
 
@@ -64,3 +65,23 @@ async def get_processing_job(
         )
 
     return job
+
+
+@router.post("/jobs/{job_id}/run", response_model=ProcessingJobResponse)
+async def run_processing_job(
+    job_id: UUID,
+    user: AuthUser = Depends(get_current_user),
+    data: SupabaseDataService = Depends(get_supabase_data_service),
+    processor: KnowledgeProcessingService = Depends(get_knowledge_processing_service),
+) -> ProcessingJobResponse:
+    job = await data.get_processing_job(user_id=user.id, job_id=str(job_id))
+    if job is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Processing job not found.")
+    try:
+        await processor.process(user_id=user.id, source_id=str(job.source_id), job_id=str(job.id))
+    except Exception as exc:
+        raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail="Processing failed.") from exc
+    completed = await data.get_processing_job(user_id=user.id, job_id=str(job_id))
+    if completed is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Processing job not found.")
+    return completed

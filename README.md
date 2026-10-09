@@ -4,7 +4,7 @@ Multimodal knowledge chatbot built with Flutter, FastAPI, and Supabase.
 
 ## Current status
 
-Phase 4 — Upload Manager + Processing Jobs.
+Phase 6 — PDF Multimodal Ingestion.
 
 ## Supabase setup
 
@@ -117,3 +117,9 @@ See `docs/PHASE_3_SETUP.md` for expected results.
 Apply `supabase/migrations/202610080002_phase4_upload_jobs.sql`, configure the FastAPI backend secret key locally, and run the Knowledge Library upload flow.
 
 Full instructions: `docs/PHASE_4_SETUP.md`
+
+## Phase 5 and 6
+
+Apply `supabase/migrations/202610080003_phase5_phase6_ingestion.sql` after the Phase 3 and 4 migrations. It enables atomic text/PDF chunk replacement and the PDF processing lifecycle.
+
+See `docs/PHASE_5_SETUP.md` and `docs/PHASE_6_SETUP.md`. PDF OCR additionally requires the Tesseract executable on the backend worker host.
