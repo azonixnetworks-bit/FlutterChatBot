@@ -8,6 +8,7 @@ from app.services.docx_ingestion import DocxExtractor
 from app.services.spreadsheet_ingestion import SpreadsheetExtractor
 from app.services.image_ingestion import ImageExtractor
 from app.services.audio_ingestion import AudioExtractor
+from app.services.video_ingestion import VideoProbe
 from app.services.supabase_data import SupabaseDataService
 
 
@@ -20,6 +21,7 @@ class KnowledgeProcessingService:
         self._spreadsheet = SpreadsheetExtractor()
         self._image = ImageExtractor()
         self._audio = AudioExtractor()
+        self._video = VideoProbe()
 
     async def process(self, *, user_id: str, source_id: str, job_id: str) -> None:
         try:
@@ -41,6 +43,8 @@ class KnowledgeProcessingService:
                 await self._process_image(user_id, source_id, job_id, source, raw)
             elif file_type in {"mp3", "wav", "m4a", "aac"}:
                 await self._complete(user_id, source_id, job_id, self._audio.extract(raw, file_type=file_type, source_id=source_id))
+            elif file_type in {"mp4", "mov", "mkv", "webm"}:
+                await self._process_video(user_id, source_id, job_id, file_type, raw)
             else:
                 raise PdfIngestionError("This processing worker supports TXT, PDF, and DOCX sources only.")
         except Exception as exc:
@@ -84,6 +88,12 @@ class KnowledgeProcessingService:
     async def _process_image(self, user_id: str, source_id: str, job_id: str, source: dict, raw: bytes) -> None:
         await self._data.update_progress(user_id=user_id, source_id=source_id, job_id=job_id, source_status="analyzing", progress=60, step="Running image OCR and vision")
         await self._complete(user_id, source_id, job_id, self._image.extract(raw, source_id=source_id, asset_path=source["storage_path"]))
+
+    async def _process_video(self, user_id: str, source_id: str, job_id: str, file_type: str, raw: bytes) -> None:
+        await self._data.update_progress(user_id=user_id, source_id=source_id, job_id=job_id, source_status="analyzing", progress=20, step="Probing video metadata")
+        metadata = self._video.probe(raw, file_type)
+        # Provider-dependent STT/OCR/vision is intentionally empty until configured.
+        await self._complete(user_id, source_id, job_id, [ChunkDraft("", "video_metadata", metadata={"source_id":source_id,"duration_ms":metadata.duration_ms,"width":metadata.width,"height":metadata.height,"frame_rate":metadata.frame_rate,"format":metadata.format,"has_audio":metadata.has_audio,"analysis_status":"pending_provider"})])
 
     async def _complete(self, user_id: str, source_id: str, job_id: str, chunks: list[ChunkDraft]) -> None:
         await self._data.update_progress(user_id=user_id, source_id=source_id, job_id=job_id, source_status="chunking", progress=80, step="Preparing page-aware chunks")
