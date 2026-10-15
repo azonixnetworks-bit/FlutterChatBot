@@ -2,7 +2,8 @@ from __future__ import annotations
 
 import mimetypes
 
-from app.services.chunking import ChunkDraft, PageAwareChunker
+from app.core.config import get_settings
+from app.services.chunking import ChunkDraft, ChunkingBlock, ChunkingDocument, ChunkingPolicy, HybridChunkingEngine, PageAwareChunker
 from app.services.pdf_ingestion import PdfExtractor, PdfIngestionError
 from app.services.docx_ingestion import DocxExtractor
 from app.services.spreadsheet_ingestion import SpreadsheetExtractor
@@ -22,6 +23,16 @@ class KnowledgeProcessingService:
         self._image = ImageExtractor()
         self._audio = AudioExtractor()
         self._video = VideoProbe()
+        settings = get_settings()
+        self._hybrid_chunker = HybridChunkingEngine(ChunkingPolicy(
+            target_tokens=settings.chunk_target_tokens, max_tokens=settings.chunk_max_tokens,
+            min_tokens=settings.chunk_min_tokens, overlap_tokens=settings.chunk_overlap_tokens,
+            parent_target_tokens=settings.parent_chunk_target_tokens,
+            parent_max_tokens=settings.parent_chunk_max_tokens,
+            semantic_enabled=settings.semantic_chunking_enabled,
+            multimodal_context_window_ms=settings.multimodal_context_window_ms,
+            table_rows_per_group=settings.table_rows_per_group,
+        ))
 
     async def process(self, *, user_id: str, source_id: str, job_id: str) -> None:
         try:
@@ -96,6 +107,7 @@ class KnowledgeProcessingService:
         await self._complete(user_id, source_id, job_id, [ChunkDraft("", "video_metadata", metadata={"source_id":source_id,"duration_ms":metadata.duration_ms,"width":metadata.width,"height":metadata.height,"frame_rate":metadata.frame_rate,"format":metadata.format,"has_audio":metadata.has_audio,"analysis_status":"pending_provider"})])
 
     async def _complete(self, user_id: str, source_id: str, job_id: str, chunks: list[ChunkDraft]) -> None:
-        await self._data.update_progress(user_id=user_id, source_id=source_id, job_id=job_id, source_status="chunking", progress=80, step="Preparing page-aware chunks")
-        rows = [{"chunk_index": index, "content": chunk.content, "content_type": chunk.content_type, "page_number": chunk.page_number, "section_title": chunk.section_title, "start_time_ms": chunk.metadata.get("start_time_ms"), "end_time_ms": chunk.metadata.get("end_time_ms"), "metadata": chunk.metadata} for index, chunk in enumerate(chunks)]
+        await self._data.update_progress(user_id=user_id, source_id=source_id, job_id=job_id, source_status="chunking", progress=80, step="Preparing hybrid chunks")
+        plan = self._hybrid_chunker.plan(ChunkingDocument(source_id, [ChunkingBlock.from_draft(chunk, index) for index, chunk in enumerate(chunks)]))
+        rows = [{"chunk_index": index, "content": chunk.content, "content_type": chunk.content_type, "page_number": chunk.page_number, "section_title": chunk.section_title, "start_time_ms": chunk.metadata.get("start_time_ms"), "end_time_ms": chunk.metadata.get("end_time_ms"), "parent_chunk_index": chunk.metadata.get("parent_chunk_index"), "metadata": chunk.metadata} for index, chunk in enumerate(plan.chunks)]
         await self._data.replace_chunks_and_complete(user_id=user_id, source_id=source_id, job_id=job_id, chunks=rows)

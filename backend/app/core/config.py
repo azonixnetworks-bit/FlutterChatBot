@@ -30,6 +30,16 @@ class Settings(BaseSettings):
     reranker_provider: str = ""
     reranker_model: str = ""
 
+    chunk_target_tokens: int = 650
+    chunk_max_tokens: int = 800
+    chunk_min_tokens: int = 80
+    chunk_overlap_tokens: int = 80
+    parent_chunk_target_tokens: int = 1400
+    parent_chunk_max_tokens: int = 1800
+    semantic_chunking_enabled: bool = True
+    multimodal_context_window_ms: int = 30_000
+    table_rows_per_group: int = 25
+
     model_config = SettingsConfigDict(
         env_file=".env",
         env_file_encoding="utf-8",
