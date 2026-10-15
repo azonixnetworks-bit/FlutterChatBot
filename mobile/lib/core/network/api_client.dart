@@ -10,7 +10,7 @@ final apiClientProvider = Provider<Dio>((ref) {
     BaseOptions(
       baseUrl: const String.fromEnvironment(
         'API_BASE_URL',
-        defaultValue: 'http://127.0.0.1:8000',
+        defaultValue: 'http://127.0.0.1:8001',
       ),
       connectTimeout: const Duration(seconds: 15),
       receiveTimeout: const Duration(seconds: 30),

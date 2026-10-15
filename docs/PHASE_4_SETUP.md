@@ -70,7 +70,7 @@ uvicorn app.main:app --reload
 ```
 
 Expected backend:
-`http://127.0.0.1:8000`
+`http://127.0.0.1:8001`
 
 ## 3. Update Flutter local config
 
@@ -80,12 +80,12 @@ Your existing ignored file `mobile/env/dev.json` should contain:
 {
   "SUPABASE_URL": "https://YOUR_PROJECT_REF.supabase.co",
   "SUPABASE_PUBLISHABLE_KEY": "YOUR_PUBLISHABLE_KEY",
-  "API_BASE_URL": "http://127.0.0.1:8000",
+  "API_BASE_URL": "http://127.0.0.1:8001",
   "UPLOAD_MAX_BYTES": "52428800"
 }
 ```
 
-For Android emulator use `http://10.0.2.2:8000` for API_BASE_URL.
+For Android emulator use `http://10.0.2.2:8001` for API_BASE_URL.
 For a physical phone use your PC's LAN IP and allow the backend through the firewall.
 
 ## 4. Run Flutter
