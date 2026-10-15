@@ -22,7 +22,7 @@ class VideoProbe:
   if not video: raise VideoIngestionError('Video stream not found.')
   duration_ms=int(float(payload.get('format',{}).get('duration',0))*1000)
   if not duration_ms or duration_ms>self.max_duration_ms: raise VideoIngestionError('Video duration is invalid or exceeds the limit.')
- return VideoMetadata(duration_ms,int(video.get('width',0)),int(video.get('height',0)),video.get('r_frame_rate',''),payload.get('format',{}).get('format_name',''),any(s.get('codec_type')=='audio' for s in streams))
+  return VideoMetadata(duration_ms,int(video.get('width',0)),int(video.get('height',0)),video.get('r_frame_rate',''),payload.get('format',{}).get('format_name',''),any(s.get('codec_type')=='audio' for s in streams))
 
 @dataclass(frozen=True)
 class Keyframe:
